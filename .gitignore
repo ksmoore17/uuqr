@@ -1,0 +1,11 @@
+*.pyc
+.DS_Store
+__pycache__
+*.afdesign
+
+credentials.csv
+passwords
+safely.pem
+
+info/
+accessKeys.csv
