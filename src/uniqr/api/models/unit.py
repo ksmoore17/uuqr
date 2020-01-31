@@ -1,5 +1,7 @@
 from mongoengine import *
 from ..helper import *
+
+from series import Series
 from exceptions import PurposeError, WrongStatusError
 
 STATUSES = ['created', 'certified', 'authenticated']
@@ -22,14 +24,14 @@ class Registration(EmbeddedDocument):
 class Unit(Document):
     code = StringField(primary_key=True, max_length=10, min_length=10)
     registration = EmbeddedDocumentField(Registration)
-    product = ReferenceField(Product, required=True)
+    series = ReferenceField(Series)
 
     meta = {'allow_inheritance': True, "db_alias": "default", 'collection': 'units'}
 
     @classmethod
     def get(cls, **kwargs):
         # launch authenticate page
-        return Unit.objects.get(kwargs)
+        return cls.objects.get(kwargs)
 
     @classmethod
     def create(cls):
@@ -53,19 +55,17 @@ class Unit(Document):
         if not any(key not in cert_data for key in ['product_id']):
             # see if the code is fresh
             if self.registration.status == 'created':
+                p = Product.get(product_id=cert_data['product_id'])
 
-                # find the product object in the database
-                try:
-                    p = Product.objects.get(product_id=cert_data['product_id'])
+                a = Access(agent=agent, purpose='certify_unit', dt=datetime.now)
 
-                    a = Access(agent=agent, purpose='certify_unit', dt=datetime.now)
+                # update the unit object
+                self.registration.status = 'certified'
+                self.registration.certification = a
+                self.product = p
 
-                    # update the unit object
-                    self.registration.status = 'certified'
-                    self.registration.certification = a
-                    self.product = p
+                self.save()
 
-                    self.save()
             else:
                 raise WrongStatusError(u.registration.status)
 
@@ -89,24 +89,20 @@ class Unit(Document):
 
         return self
 
+    # def register(self, purpose, reg_data):
     def register(self, registration):
         purpose = registation['purpose']
 
         # need to separate authentication and certification
         if purpose == 'certify':
-            # find the unit object to register
-            u = Unit.get(code=cd)
-            return u.certify(registation['data'])
+            return self.certify(registation['data'])
 
         elif purpose == 'authenticate':
             # find the unit object to register
-            u = Unit.get(code=cd)
-            return u.authenticate()
+            self.authenticate()
 
         else:
             raise PurposeError(purpose)
-    
+
     def delete(self):
         self.delete()
-
-
