@@ -1,4 +1,4 @@
-# qrcode-auth
+# uniqr
 
 An end user product authentication system.
 
