@@ -1,8 +1,10 @@
 from mongoengine import *
-from ..helper import *
 
-from series import Series
+from .series import Series
 from ..exceptions import PurposeError, WrongStatusError
+from ..helper import create_alphanumeric_id
+
+from datetime import datetime
 
 STATUSES = ['created', 'certified', 'authenticated']
 PURPOSES = ['create', 'certify', 'authenticate']
@@ -10,8 +12,8 @@ PURPOSES = ['create', 'certify', 'authenticate']
 class Registration(EmbeddedDocument):
     status = StringField(required=True, choices=STATUSES)
     creation = DateTimeField(required=True)
-    certification = DateTimeField(required=True)
-    authentication = DateTimeField(required=True)
+    certification = DateTimeField()
+    authentication = DateTimeField()
 
 class Unit(Document):
     code = StringField(primary_key=True, max_length=10, min_length=10)
@@ -34,8 +36,7 @@ class Unit(Document):
             # if code doesn't already exist
             if not cls.objects(code=cd):
                 # create an access record to attach to the creation
-                a = Access(agent=agent, purpose='create_unit', dt=datetime.now)
-                u = cls(code=cd, registration=Registration(status='created', creation=a))
+                u = cls(code=cd, registration=Registration(status='created', creation=datetime.now()))
                 u.save()
 
                 created = True
@@ -98,3 +99,7 @@ class Unit(Document):
 
     def delete(self):
         self.delete()
+
+    @classmethod
+    def drop(cls):
+        self.drop_collection()

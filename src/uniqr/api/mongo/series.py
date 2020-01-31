@@ -1,8 +1,7 @@
-from mongoengine import URLField
-from ..helper import *
+from mongoengine import Document, StringField
 
 class Series(Document):
-    domain = UrlField(primary_key=True)
+    field = StringField(primary_key=True)
 
     meta = {'allow_inheritance': True, "db_alias": "default", 'collection': 'identifier'}
 
@@ -16,7 +15,7 @@ class Series(Document):
         # create candidate product ids until one is not in the database
         s = cls(**kwargs)
 
-                s.save()
+        s.save()
 
         return s
 
