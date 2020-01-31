@@ -1,8 +1,8 @@
-class ExistenceError(Exception):
+class ExistenceWarning(Warning):
     pass
 
-class PurposeError(Exception):
+class PurposeError(Error):
     pass
 
-class WrongStatusError(Exception):
+class WrongStatusError(Error):
     pass
