@@ -2,24 +2,16 @@ from mongoengine import *
 from ..helper import *
 
 from series import Series
-from exceptions import PurposeError, WrongStatusError
+from ..exceptions import PurposeError, WrongStatusError
 
 STATUSES = ['created', 'certified', 'authenticated']
 PURPOSES = ['create', 'certify', 'authenticate']
 
-class Access(EmbeddedDocument):
-    agent = ReferenceField(User, required=True)
-    purpose = StringField(required=True, choices=PURPOSES)
-    dt = DateTimeField(required=True)
-
-    meta = {"db_alias": "default", 'collection': 'accesses'}
-
 class Registration(EmbeddedDocument):
     status = StringField(required=True, choices=STATUSES)
-    creation = EmbeddedDocumentField(Access, required=True)
-    print = EmbeddedDocumentField(Access)
-    certification = EmbeddedDocumentField(Access)
-    authentication = EmbeddedDocumentField(Access)
+    creation = DateTimeField(required=True)
+    certification = DateTimeField(required=True)
+    authentication = DateTimeField(required=True)
 
 class Unit(Document):
     code = StringField(primary_key=True, max_length=10, min_length=10)
