@@ -1,7 +1,8 @@
-# uniqr
-
-An end user product authentication system.
+# uuqr
 
 Uses unique QR codes to provide authentication status.
 
-Currently built for MongoDB.
+## Extensions
+
+## Implementations
+* [uuqr-mongoengine](https://github.com/ksmoore17/uuqr-mongoengine "uuqr-mongoengine")
