@@ -3,8 +3,24 @@ from .helper import create_alphanumeric_id
 
 # base for mongo.Unit, *.Unit, etc.
 class Unit:
+    #
+    # redefine __init__ function on multiple inheritance
+    # mongoengine example:
+    #
+    ##########################################################################
+    #
+    #    def __init__(self, **kwargs):
+    #        b = BaseUnit(**kwargs)
+    #        rs = [Registration(purpose='create', datetime=datetime.now())]
+    #        return super(Document, self).__init__(
+    #            code=b.code,
+    #            status=b.status,
+    #            registrations=rs,
+    #            **kwargs)
+    #
     def __init__(self, *args, **kwargs):
         return self.create_helper(**kwargs)
+
 
     def create_helper(self, code=create_alphanumeric_id(10), resource=None, *args, **kwargs):
         ## get_uuid()
@@ -12,15 +28,17 @@ class Unit:
         self.status = "created"
         self.resource = resource
 
+    # redefine _helper functions on inheritance
     def certify_helper(self):
         return self
 
     def certify(self, resource, *args, **kwargs):
+        print(kwargs)
         # see if the code is fresh
         if self.status == 'created':
             self.status = 'certified'
             self.resource = resource
-            return self.certify_helper()
+            return self.certify_helper(resource, *args, **kwargs)
 
         # elif self.registration.status == 'certified':
         #     raise WrongStatusError(u.registration.status)
@@ -56,7 +74,10 @@ class Resource:
         self.port = port
         self.path = path
 
-    def get_url():
+    # def modify(self, host, subdomain=self.subdomain, port=self.port, path=self.path, *args, **kwargs):
+    #     create_helper()
+
+    def get_url(self):
         return "{0}{1}{2}{3}".format(
             self.subdomain + '.' if self.subdomain else '',
             self.host,
