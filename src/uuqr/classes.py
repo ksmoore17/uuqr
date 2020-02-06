@@ -19,44 +19,54 @@ class Unit:
     #            **kwargs)
     #
     def __init__(self, *args, **kwargs):
-        return self.create_helper(**kwargs)
+        init = self.create_helper(*args, **kwargs)
+        self.code = init['code']
+        self.status = init['status']
+        self.resource = init['resource']
 
-
-    def create_helper(self, code=create_alphanumeric_id(10), resource=None, *args, **kwargs):
+    @staticmethod
+    def create_helper(code=create_alphanumeric_id(10), resource=None, *args, **kwargs):
         ## get_uuid()
-        self.code = code
-        self.status = "created"
-        self.resource = resource
+        return {
+            'code' : code,
+            'status' : 'created',
+            'resource' : resource
+        }
 
     # redefine _helper functions on inheritance
-    def certify_helper(self):
-        return self
-
-    def certify(self, resource, *args, **kwargs):
-        print(kwargs)
+    @staticmethod
+    def certify_helper(curr_status, resource):
         # see if the code is fresh
-        if self.status == 'created':
-            self.status = 'certified'
-            self.resource = resource
-            return self.certify_helper(resource, *args, **kwargs)
-
+        if curr_status == 'created':
+            return {
+                'status' : 'certified',
+                'resource' : resource
+            }
         # elif self.registration.status == 'certified':
         #     raise WrongStatusError(u.registration.status)
-
         else:
             raise WrongStatusError(self.status)
 
-    def authenticate_helper(self):
-        return self
+    def certify(self, resource, *args, **kwargs):
+        cert = self.certify_helper(self.status, resource)
+        self.status = cert['status']
+        self.resource = cert['resource']
+
+    @staticmethod
+    def authenticate_helper(curr_status):
+        # see if the code has a product
+        if curr_status == 'certified':
+            return {
+                'status' : 'authenticated'
+            }
+        # elif self.registration.status == 'authenticated':
+        #     raise WrongStatusError(u.registration.status)
+        else:
+            raise WrongStatusError(self.status)
 
     def authenticate(self):
-        # see if the unit has been assigned a product
-        if self.status == 'certified':
-            self.status = 'authenticated'
-            return self.authenticate_helper()
-
-        else:
-            raise WrongStatusError(self.status)
+        auth = self.authenticate_helper(self.status)
+        self.status = auth['status']
 
     def get_url(self):
         return "{}{}".format(
