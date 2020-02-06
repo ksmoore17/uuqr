@@ -8,7 +8,7 @@ setup(
     version="0.0.1",
     author="Kyle Moore",
     author_email="moore.kyle39@gmail.com",
-    description="A package for storing unique QR codes",
+    description="Package for creating unique QR codes",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/pypa/sampleproject",

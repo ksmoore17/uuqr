@@ -1,1 +1,2 @@
-from .classes import Resource, Unit
+from .resource import Resource
+from .unit import Unit

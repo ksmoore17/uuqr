@@ -1,22 +1,24 @@
 from .exceptions import PurposeError, WrongStatusError
 from .helper import create_alphanumeric_id
 
+from . import Resource
+
 # base for mongo.Unit, *.Unit, etc.
 class Unit:
     #
-    # redefine __init__ function on multiple inheritance
-    # mongoengine example:
+    #       redefine __init__ function on multiple inheritance
+    #           mongoengine example:
     #
     ##########################################################################
     #
-    #    def __init__(self, **kwargs):
-    #        b = BaseUnit(**kwargs)
-    #        rs = [Registration(purpose='create', datetime=datetime.now())]
-    #        return super(Document, self).__init__(
-    #            code=b.code,
-    #            status=b.status,
-    #            registrations=rs,
-    #            **kwargs)
+    #    # check if document already exists
+    #    if '_created' in kwargs.keys():
+    #        init = kwargs
+    #    else:
+    #        init = self._init_helper(**kwargs)
+    #        init['registrations'] = [Registration(purpose='create', datetime=datetime.now())]
+    #
+    #    super().__init__(**init)
     #
     def __init__(self, *args, **kwargs):
         init = self._init_helper(*args, **kwargs)
@@ -76,33 +78,4 @@ class Unit:
         return "{}{}".format(
             self.resource.get_url() + '/' if self.resource else '',
             self.code
-        )
-
-class Resource:
-    def __init__(self, host, *args, **kwargs):
-        init = self._init_helper(host, *args, **kwargs)
-        self.subdomain = init['subdomain']
-        self.host = init['host']
-        self.port = init['port']
-        self.path = init['path']
-
-    @staticmethod
-    def _init_helper(host, subdomain=None, port=None, path=None, *args, **kwargs):
-        ## get_uuid()
-        return {
-            'subdomain' : subdomain,
-            'host' : host,
-            'port' : port,
-            'path' : path
-        }
-
-    # def modify(self, host, subdomain=self.subdomain, port=self.port, path=self.path, *args, **kwargs):
-    #     create_helper()
-
-    def get_url(self):
-        return "{0}{1}{2}{3}".format(
-            self.subdomain + '.' if self.subdomain else '',
-            self.host,
-            ':' + self.port if self.port else '',
-            (('/' + dir) for dir in self.path) if self.path else ''
         )
