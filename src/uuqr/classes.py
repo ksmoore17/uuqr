@@ -19,17 +19,17 @@ class Unit:
     #            **kwargs)
     #
     def __init__(self, *args, **kwargs):
-        init = self._create_helper(*args, **kwargs)
+        init = self._init_helper(*args, **kwargs)
         self.code = init['code']
         self.status = init['status']
         self.resource = init['resource']
 
     @staticmethod
-    def _create_helper(code=create_alphanumeric_id(10), resource=None, *args, **kwargs):
+    def _init_helper(code=create_alphanumeric_id(10), resource=None, status='created', *args, **kwargs):
         ## get_uuid()
         return {
             'code' : code,
-            'status' : 'created',
+            'status' : status,
             'resource' : resource
         }
 
