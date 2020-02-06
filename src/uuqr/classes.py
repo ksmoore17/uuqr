@@ -19,13 +19,13 @@ class Unit:
     #            **kwargs)
     #
     def __init__(self, *args, **kwargs):
-        init = self.create_helper(*args, **kwargs)
+        init = self._create_helper(*args, **kwargs)
         self.code = init['code']
         self.status = init['status']
         self.resource = init['resource']
 
     @staticmethod
-    def create_helper(code=create_alphanumeric_id(10), resource=None, *args, **kwargs):
+    def _create_helper(code=create_alphanumeric_id(10), resource=None, *args, **kwargs):
         ## get_uuid()
         return {
             'code' : code,
@@ -35,7 +35,7 @@ class Unit:
 
     # redefine _helper functions on inheritance
     @staticmethod
-    def certify_helper(curr_status, resource):
+    def _certify_helper(curr_status, resource):
         # see if the code is fresh
         if curr_status == 'created':
             return {
@@ -48,12 +48,14 @@ class Unit:
             raise WrongStatusError(self.status)
 
     def certify(self, resource, *args, **kwargs):
-        cert = self.certify_helper(self.status, resource)
+        cert = self._certify_helper(self.status, resource)
         self.status = cert['status']
         self.resource = cert['resource']
 
+        return self
+
     @staticmethod
-    def authenticate_helper(curr_status):
+    def _authenticate_helper(curr_status):
         # see if the code has a product
         if curr_status == 'certified':
             return {
@@ -65,8 +67,10 @@ class Unit:
             raise WrongStatusError(self.status)
 
     def authenticate(self):
-        auth = self.authenticate_helper(self.status)
+        auth = self._authenticate_helper(self.status)
         self.status = auth['status']
+
+        return self
 
     def get_url(self):
         return "{}{}".format(
