@@ -2,26 +2,27 @@ import pytest
 
 from uuqr import *
 
-class TestCreates:
+
+host = "moore.com"
+r = Resource(host="moore.com")
+
+u = Unit()
+
+class TestClasses:
     def test_creation(self):
-        u = Unit()
-
         assert isinstance(u, Unit)
-
-        r = Resource(host="moore.com")
-
         assert isinstance(r, Resource)
 
-class TestRegisters:
+    def test_url(self):
+        assert r.get_url() == r.host
+        assert u.get_url() == u.code
+
     def test_registration(self):
-        u = Unit()
-
-        r = Resource(host="moore.com")
-
         u.certify(r)
-
         assert u.status == "certified"
 
         u.authenticate()
-
         assert u.status == "authenticated"
+
+    def test_composite_url(self):
+        assert u.get_url() == r.host + '/' + u.code

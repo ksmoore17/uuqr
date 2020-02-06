@@ -45,7 +45,7 @@ class Unit:
         # elif self.registration.status == 'certified':
         #     raise WrongStatusError(u.registration.status)
         else:
-            raise WrongStatusError(self.status)
+            raise WrongStatusError(curr_status)
 
     def certify(self, resource, *args, **kwargs):
         cert = self._certify_helper(self.status, resource)
@@ -80,13 +80,21 @@ class Unit:
 
 class Resource:
     def __init__(self, host, *args, **kwargs):
-        return self.create_helper(host, *args, **kwargs)
+        init = self._init_helper(host, *args, **kwargs)
+        self.subdomain = init['subdomain']
+        self.host = init['host']
+        self.port = init['port']
+        self.path = init['path']
 
-    def create_helper(self, host, subdomain=None, port=None, path=None, *args, **kwargs):
-        self.subdomain = subdomain
-        self.host = host
-        self.port = port
-        self.path = path
+    @staticmethod
+    def _init_helper(host, subdomain=None, port=None, path=None, *args, **kwargs):
+        ## get_uuid()
+        return {
+            'subdomain' : subdomain,
+            'host' : host,
+            'port' : port,
+            'path' : path
+        }
 
     # def modify(self, host, subdomain=self.subdomain, port=self.port, path=self.path, *args, **kwargs):
     #     create_helper()

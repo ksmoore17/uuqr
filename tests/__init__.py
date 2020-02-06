@@ -1,1 +1,1 @@
-from .test_classes import TestCreates, TestRegisters
+from .test_classes import TestClasses
