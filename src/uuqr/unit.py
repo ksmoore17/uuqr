@@ -22,18 +22,23 @@ class Unit:
     #
     def __init__(self, *args, **kwargs):
         init = self._init_helper(*args, **kwargs)
-        self.code = init['code']
-        self.status = init['status']
-        self.resource = init['resource']
+        self.code = init.pop('code')
+        self.status = init.pop('status')
+        self.resource = init.pop('resource')
 
     @staticmethod
     def _init_helper(code=create_alphanumeric_id(10), resource=None, status='created', *args, **kwargs):
         ## get_uuid()
-        return {
-            'code' : code,
-            'status' : status,
-            'resource' : resource
-        }
+        init = {}
+
+        init['code'] = code
+        init['status'] = status
+        init['resource'] = resource
+
+        for key, value in kwargs.items():
+            init[key] = value
+
+        return init
 
     # redefine _helper functions on inheritance
     @staticmethod

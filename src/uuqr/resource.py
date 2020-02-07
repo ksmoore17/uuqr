@@ -9,13 +9,17 @@ class Resource:
 
     @staticmethod
     def _init_helper(host, subdomain=None, port=None, path=None, *args, **kwargs):
-        ## get_uuid()
-        return {
-            'subdomain' : subdomain,
-            'host' : host,
-            'port' : port,
-            'path' : path
-        }
+        init = {}
+
+        init['subdomain'] = subdomain
+        init['host'] = host
+        init['port'] = port
+        init['path'] = path
+
+        for key, value in kwargs.items():
+            init[key] = value
+
+        return init
 
     # def modify(self, host, subdomain=self.subdomain, port=self.port, path=self.path, *args, **kwargs):
     #     create_helper()
