@@ -1,12 +1,8 @@
 *.pyc
-.DS_Store
 __pycache__
-*.afdesign
 *.egg-info
+.pytest_cache
 
-credentials.csv
-passwords
-safely.pem
+*.pem
 
-info/
-accessKeys.csv
+.DS_Store
