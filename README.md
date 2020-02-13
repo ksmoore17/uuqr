@@ -1,6 +1,6 @@
 # uuqr
 
-Uses unique QR codes to provide authentication status.
+Use unique QR codes to provide a status.
 
 ## Extensions
 
