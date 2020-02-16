@@ -1,18 +1,12 @@
-# defines helper functions for core and admin purposes
+"""
+defines helper functions for classes
+"""
 
-import random
-# import secrets
-from string import ascii_uppercase
+from uuid import uuid4
 
-def create_alphanumeric_id(n):
-    id = "0" * n
-
-    valid_digits = list(map(str, range(0, 10))) + list(ascii_uppercase)
-
-    for i in range(n):
-        id = id[:i] + random.choice(valid_digits) + id[i+1:]
-
-    return id
+def create_uuid():
+    uuid = uuid4()
+    return uuid.hex
 
 """
 def secret_code():

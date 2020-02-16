@@ -1,7 +1,7 @@
 from .exceptions import PurposeError, WrongStatusError
-from .helper import create_alphanumeric_id
+from .helper import create_uuid
 
-from . import Resource
+from .resource import Resource
 
 # base for mongo.Unit, *.Unit, etc.
 class Unit:
@@ -27,11 +27,11 @@ class Unit:
         self.resource = init.pop('resource')
 
     @staticmethod
-    def _init_helper(code=create_alphanumeric_id(10), resource=None, status='created', *args, **kwargs):
+    def _init_helper(resource=None, status='created', **kwargs):
         ## get_uuid()
         init = {}
 
-        init['code'] = code
+        init['code'] = create_uuid()
         init['status'] = status
         init['resource'] = resource
 

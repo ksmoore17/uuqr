@@ -1,7 +1,6 @@
 import pytest
 
-from uuqr import *
-
+from uuqr import Unit, Resource
 
 host = "moore.com"
 r = Resource(host="moore.com")
