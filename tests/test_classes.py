@@ -2,8 +2,8 @@ import pytest
 
 from uuqr import Unit, Resource
 
-host = "moore.com"
-r = Resource(host="moore.com")
+TEST_DOMAIN = "moore.com"
+r = Resource(domain=TEST_DOMAIN)
 
 u = Unit()
 
@@ -13,7 +13,7 @@ class TestClasses:
         assert isinstance(r, Resource)
 
     def test_url(self):
-        assert r.get_url() == r.host
+        assert r.get_url() == TEST_DOMAIN
         assert u.get_url() == u.code
 
     def test_registration(self):
@@ -24,4 +24,4 @@ class TestClasses:
         assert u.status == "authenticated"
 
     def test_composite_url(self):
-        assert u.get_url() == r.host + '/' + u.code
+        assert u.get_url() == TEST_DOMAIN + '/' + u.code
